@@ -182,3 +182,12 @@ function readFile(file)
     rawFile.send(null);
     return fileContents;
 }
+
+
+var lastTime = 0;
+function getDeltaTime() {
+    var timeNow = new Date().getTime();
+    var deltaTime = lastTime == 0 ? 0 : timeNow - lastTime;
+    lastTime = timeNow;
+    return deltaTime/1000;
+}
