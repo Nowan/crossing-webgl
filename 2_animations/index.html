@@ -64,9 +64,9 @@
 		        var vertexPositionBuffer = createBuffer(vertices, 3);
 		        var vertexColorBuffer = createBuffer(colors, 4);
 
-		        draw(vertexPositionBuffer, vertexColorBuffer, [0,0,-7.0], polygonData.rotation);
+		        polygonData.rotation += 90*getDeltaTime();
 
-		        console.log(getDeltaTime());
+		        draw(vertexPositionBuffer, vertexColorBuffer, [0,0,-7.0], polygonData.rotation);
 			}
 
 			function onLoad(){

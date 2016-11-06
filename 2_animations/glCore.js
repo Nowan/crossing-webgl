@@ -57,7 +57,7 @@ function draw(positionBuffer, colorBuffer, translationXYZ, rotation){
     mvPushMatrix();
 
     if(rotation)
-        mat4.rotate(mvMatrix, rotation*Math.PI/180, [0, 0, 1]);
+        mat4.rotate(mvMatrix, rotation*Math.PI/180, [0, 1, 0]);
 
     // bind position buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -189,5 +189,5 @@ function getDeltaTime() {
     var timeNow = new Date().getTime();
     var deltaTime = lastTime == 0 ? 0 : timeNow - lastTime;
     lastTime = timeNow;
-    return deltaTime/1000;
+    return deltaTime/1000.0;
 }
