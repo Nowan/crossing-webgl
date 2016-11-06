@@ -52,19 +52,28 @@
 				return { "vertices": shaderVertices, "colors": shaderColors };
 			}
 
-			function onLoad(){
-				var canvas = document.getElementById("glCanvas");
-				initGL(canvas);
+			var polygonData;
 
-				var polygonData = computePolygonData(10, 1.0, [0.0,0.0,0.0]);
+			function onFrameUpdate(){
+				// call this function once more when browser needs a repaint
+				requestAnimFrame(onFrameUpdate);
 
-		        var vertices = polygonData.vertices;
+				var vertices = polygonData.vertices;
 		        var colors = polygonData.colors;
 
 		        var vertexPositionBuffer = createBuffer(vertices, 3);
 		        var vertexColorBuffer = createBuffer(colors, 4);
 
 		        draw(vertexPositionBuffer, vertexColorBuffer, [0,0,-7.0]);
+			}
+
+			function onLoad(){
+				var canvas = document.getElementById("glCanvas");
+				initGL(canvas);
+
+				polygonData = computePolygonData(10, 1.0, [0.0,0.0,0.0]);
+
+		        onFrameUpdate();
 			}
 
 		</script>
