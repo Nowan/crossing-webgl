@@ -43,13 +43,16 @@ function initGL(canvas){
 }
 
 
-function draw(positionBuffer, colorBuffer, translationXYZ){
+function draw(positionBuffer, colorBuffer, translationXYZ, rotation){
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     mat4.identity(mvMatrix);
 
     if(translationXYZ)
         mat4.translate(mvMatrix, translationXYZ);
+
+    if(rotation)
+        mat4.rotate(mvMatrix, rotation*Math.PI/180, [0, 0, 1]);
 
     // bind position buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
