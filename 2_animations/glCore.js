@@ -3,6 +3,7 @@ var gl;
 var shaderProgram;
 var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
+var mvMatrixStack = [];
 
 function initGL(canvas){
 
@@ -51,6 +52,10 @@ function draw(positionBuffer, colorBuffer, translationXYZ, rotation){
     if(translationXYZ)
         mat4.translate(mvMatrix, translationXYZ);
 
+    // initialize new matrix state, so the rotation transition
+    // would not affect next object
+    mvPushMatrix();
+
     if(rotation)
         mat4.rotate(mvMatrix, rotation*Math.PI/180, [0, 0, 1]);
 
@@ -71,6 +76,9 @@ function draw(positionBuffer, colorBuffer, translationXYZ, rotation){
     setMatrixUniforms();
 
     gl.drawArrays(gl.TRIANGLES, 0, positionBuffer.numItems);
+
+    // return to the previous matrix state
+    mvPopMatrix();
 }
 
 
@@ -138,6 +146,21 @@ function compileShader(shaderSource, shaderType) {
 function setMatrixUniforms() {
     gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
     gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+}
+
+
+function mvPushMatrix() {
+    var copy = mat4.create();
+    mat4.set(mvMatrix, copy);
+    mvMatrixStack.push(copy);
+}
+
+
+function mvPopMatrix() {
+    if (mvMatrixStack.length == 0) {
+        throw "Invalid popMatrix!";
+    }
+    mvMatrix = mvMatrixStack.pop();
 }
 
 
