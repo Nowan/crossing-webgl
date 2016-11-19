@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"> 
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<title>WebGL initialization</title>
+		<script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
+		<script type="text/javascript" src="webgl-utils.js"></script>
+		<script type="text/javascript" src="glCore.js"></script>
+		<script type="text/javascript">
+
+			function computePolygonData(sidesNumber, radius, centerXYZ){
+				if(sidesNumber<3) return;
+
+				var shaderVertices = [];
+				var shaderColors = [];
+
+				var regularAngle = (2*Math.PI)/sidesNumber;
+
+				// calculate the positions of each vertice of polygon
+				var polygonVertices = [];
+				for(var i=0;i<sidesNumber;i++){
+					var angle = regularAngle*i;
+					var vX = centerXYZ[0] + radius*Math.sin(angle);
+					var vY = centerXYZ[1] + radius*Math.cos(angle);
+					var vZ = centerXYZ[2];
+
+					polygonVertices[polygonVertices.length] = [vX,vY,vZ];
+				}
+
+				// group vertices in triangle fragments
+				for(var i=0;i<sidesNumber-2;i++){
+					shaderVertices = shaderVertices.concat(polygonVertices[0]);
+					shaderVertices = shaderVertices.concat(polygonVertices[i+1]);
+					shaderVertices = shaderVertices.concat(polygonVertices[i+2]);
+
+					// set color for the whole fragment
+					var randomColor = {
+						"a": 1.0,
+						"r": Math.random(),
+						"g": Math.random(),
+						"b": Math.random()
+					};
+
+					for(var c=0;c<3;c++){
+						shaderColors[shaderColors.length] = randomColor.r;
+						shaderColors[shaderColors.length] = randomColor.g;
+						shaderColors[shaderColors.length] = randomColor.b;
+						shaderColors[shaderColors.length] = randomColor.a;
+					}
+				}
+
+				return { "vertices": shaderVertices, "colors": shaderColors };
+			}
+
+			var polygonData;
+
+			function onFrameUpdate(){
+				// call this function once more when browser needs a repaint
+				requestAnimFrame(onFrameUpdate);
+
+				var vertices = polygonData.vertices;
+		        var colors = polygonData.colors;
+
+		        var vertexPositionBuffer = createBuffer(vertices, 3);
+		        var vertexColorBuffer = createBuffer(colors, 4);
+
+		        polygonData.rotation += 90*getDeltaTime();
+
+		        draw(vertexPositionBuffer, vertexColorBuffer, [0,0,-7.0], polygonData.rotation);
+			}
+
+			function onLoad(){
+				var canvas = document.getElementById("glCanvas");
+				initGL(canvas);
+
+				polygonData = computePolygonData(10, 1.0, [0.0,0.0,0.0]);
+				polygonData.rotation = 0;
+
+		        onFrameUpdate();
+			}
+
+		</script>
+	</head>
+	<body onload="onLoad()">
+		<canvas id="glCanvas" width="640" height="480" style="border: 1px solid black;"/>
+	</body> 
+</html>
