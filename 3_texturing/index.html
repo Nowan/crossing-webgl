@@ -62,7 +62,7 @@
 
 		        polygonData.rotation += 90*getDeltaTime();
 
-		        draw(vertexPositionBuffer, vertexColorBuffer, [0,0,-7.0], polygonData.rotation);
+		        draw(vertexPositionBuffer, vertexColorBuffer, [5.0,0.0,-5.0], polygonData.rotation);
 
 		        // call next frame repaint
 				requestAnimFrame(function(){
@@ -74,7 +74,7 @@
 				var canvas = document.getElementById("glCanvas");
 				initGL(canvas);
 
-				var polygonData = computePolygonData(10, 1.0, [0.0,0.0,0.0]);
+				var polygonData = computePolygonData(20, 2.0, [0.0,0.0,0.0]);
 				polygonData.rotation = 0;
 
 		        onFrameUpdate(polygonData);
