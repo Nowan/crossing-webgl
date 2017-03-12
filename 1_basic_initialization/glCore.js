@@ -3,6 +3,7 @@ var gl;
 var shaderProgram;
 var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
+var mvMatrixStack = [];
 
 function initGL(canvas){
 
@@ -33,8 +34,10 @@ function initGL(canvas){
         // set viewport
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 
-        // set perspective
+        // set camera view point & perspective
         mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+        mat4.lookAt([0,5,10], [0,0,0], [0,1,0], mvMatrix);
+        
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
@@ -43,13 +46,19 @@ function initGL(canvas){
 }
 
 
-function draw(positionBuffer, colorBuffer, translationXYZ){
+function draw(positionBuffer, colorBuffer, translationXYZ, rotation){
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    mat4.identity(mvMatrix);
+    // initialize new matrix state, so the rotation transition
+    // would not affect next object
+    mvPushMatrix();
 
-    if(translationXYZ)
+    if(translationXYZ){
         mat4.translate(mvMatrix, translationXYZ);
+    }
+
+    if(rotation)
+        mat4.rotate(mvMatrix, rotation*Math.PI/180, [0, 1, 0]);
 
     // bind position buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -68,6 +77,9 @@ function draw(positionBuffer, colorBuffer, translationXYZ){
     setMatrixUniforms();
 
     gl.drawArrays(gl.TRIANGLES, 0, positionBuffer.numItems);
+
+    // return to the previous matrix state
+    mvPopMatrix();
 }
 
 
@@ -138,6 +150,21 @@ function setMatrixUniforms() {
 }
 
 
+function mvPushMatrix() {
+    var copy = mat4.create();
+    mat4.set(mvMatrix, copy);
+    mvMatrixStack.push(copy);
+}
+
+
+function mvPopMatrix() {
+    if (mvMatrixStack.length == 0) {
+        throw "Invalid popMatrix!";
+    }
+    mvMatrix = mvMatrixStack.pop();
+}
+
+
 // synchronously read and return file contents
 function readFile(file)
 {
@@ -155,4 +182,13 @@ function readFile(file)
     }
     rawFile.send(null);
     return fileContents;
+}
+
+
+var lastTime = 0;
+function getDeltaTime() {
+    var timeNow = new Date().getTime();
+    var deltaTime = lastTime == 0 ? 0 : timeNow - lastTime;
+    lastTime = timeNow;
+    return deltaTime/1000.0;
 }
