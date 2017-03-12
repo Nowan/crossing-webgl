@@ -17,6 +17,5 @@ void main(void) {
     gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
 
     vNormal = vec3(uMVMatrix * vec4 ( aNormalVector, 0 ) );
-    vView = vec3(uMVMatrix * vec4( aVertexPosition, 1.0 ) );
     vUV = aUvPosition;
 }
