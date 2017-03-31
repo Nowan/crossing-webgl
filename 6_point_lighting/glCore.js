@@ -94,6 +94,7 @@ function draw(vertexBuffer, facesBuffer, rotation){
     // bind matrix uniforms
     gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
     gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+    gl.uniform3fv(shaderProgram.lightPositionUniform, glConfig.light_position ? glConfig.light_position : [0, -2, 0]);
 
     gl.drawElements(gl.TRIANGLES, facesBuffer.size, gl.UNSIGNED_SHORT, 0);
     gl.flush();
@@ -161,6 +162,9 @@ function createShaderProgram(shaders){
     // get references of projection & model-view uniforms
     shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
     shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+
+    // get reference of light position uniform
+    shaderProgram.lightPositionUniform = gl.getUniformLocation(shaderProgram, "uLightPosition");
 
     return shaderProgram;
 }
