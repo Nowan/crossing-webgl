@@ -22,5 +22,5 @@ void main(void) {
 	vUV = aUvPosition;
     vNormal = vec3(uMVMatrix * vec4 ( aNormalVector, 0 ) );
     vView = vec3(uMVMatrix * vec4( aVertexPosition, 1.0 ) );
-    vSurface = uLightPosition - (uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0)).xyz;
+    vSurface = uLightPosition - (uMVMatrix * vec4(aVertexPosition, 1.0)).xyz;
 }
