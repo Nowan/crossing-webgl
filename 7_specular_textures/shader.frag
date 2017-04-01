@@ -35,8 +35,9 @@ void main() {
 	vec3 V = normalize( vView );
 	vec3 R = reflect( surface_to_light, vNormal ); // compute reflection vector
 
-	float specularExponent = texture2D(uSpecular, vUV).a;
 	vec3 I_specular = source_specular_color * mat_specular_color;
+
+	float specularExponent = 300.0 * texture2D(uSpecular, vUV).a + 50.0;
 	I_specular *= pow( max( dot( R, V ), 0.0 ), specularExponent);
 
 	vec3 I = I_ambient + vAttenuation * I_diffuse + vAttenuation * I_specular;

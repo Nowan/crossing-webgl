@@ -10,11 +10,11 @@
 
 			var glConfig = {
 				v_field_of_view: 45, // camera's vertical field of view
-				viewer_position: [-20, 20, 10], // position of camera
+				viewer_position: [0, 0, 20], // position of camera
 				target: [0, 0, 0], // position where camera is looking at
-				light_intensity: 70.0,
-				light_position: [11, 20, 0],
-				light_attenuation: [1.0, 0.6, 0.08]
+				light_intensity: 25.0,
+				light_position: [8, 6, 1],
+				light_attenuation: [1.0, 0.2, 0.04]
 			}
 
 			/* vertex data in format [ x, y, z,    Nx, Ny, Nz,    u, v,
@@ -22,40 +22,27 @@
 									   			...		   ]4
 				where x, y, z - vertex position; Nx, Ny, Nz - normal vector; u, v - UV coordinates of texture
 			*/
-			var vertices = [ 0, 10, 0,      0.5735, 0.5735, 0.5735,     0.5, 1,
-							 10, 0, 0,      0.5735, 0.5735, 0.5735,     0, 0,
-							 0, 0, 10,      0.5735, 0.5735, 0.5735,     1, 0,
+			var vertices = [  5, 5, 0.001,      0, 0, 1,     0, 0,
+							 -5, 5, 0.001,      0, 0, 1,     0, 1,
+							 -5, -5, 0.001,     0, 0, 1,     1, 1,
+							 5, -5, 0.001,     	0, 0, 1,     1, 0,
 
-							 0, 10, 0,      -0.5735, 0.5735, 0.5735,    0.5, 1,
-							 0, 0, 10,      -0.5735, 0.5735, 0.5735,    0, 0,
-							 -10, 0, 0,     -0.5735, 0.5735, 0.5735,    1, 0,
-
-							 0, 10, 0,      -0.5735, 0.5735, -0.5735,    0.5, 1,
-							 -10, 0, 0,     -0.5735, 0.5735, -0.5735,    0, 0,
-							 0, 0, -10,     -0.5735, 0.5735, -0.5735,    1, 0,
-
-							 0, 10, 0,      0.5735, 0.5735, -0.5735,     0.5, 1,
-							 0, 0, -10,     0.5735, 0.5735, -0.5735,     0, 0,
-							 10, 0, 0,      0.5735, 0.5735, -0.5735,     1, 0,
-
-							 10, 0, 0,      0, 0.5, 0,     0, 0,
-							 0, 0, 10,      0, 0.5, 0,     0, 1,
-							 -10, 0, 0,     0, 0.5, 0,     1, 1,
-							 0, 0, -10,     0, 0.5, 0,     1, 0 ];
+							 5, 5, -0.001,      0, 0, -1,    0, 0,
+							 -5, 5, -0.001,     0, 0, -1,    0, 1,
+							 -5, -5, -0.001,    0, 0, -1,    1, 1,
+							 5, -5, -0.001,     0, 0, -1,    1, 0 ];
 
 			var faces = [ 0, 1, 2, 
-						  3, 4, 5,
-						  6, 7, 8,
-						  9, 10, 11,
-						  12, 13, 14,
-						  12, 14, 15 ];
+						  0, 2, 3,
+						  4, 5, 6,
+						  4, 6, 7 ];
 
 			var rotation = 0;
 
 			function onFrameUpdate(){
 		        var vertexBuffer = createArrayBuffer(vertices);
 				var facesBuffer = createElementArrayBuffer(faces);
-		        //rotation += 90 * getDeltaTime();
+		        rotation += 10 * getDeltaTime();
 		        draw(vertexBuffer, facesBuffer, rotation);
 
 		        // call next frame repaint
