@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"> 
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<title>WebGL Phong Shading</title>
+		<script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
+		<script type="text/javascript" src="webgl-utils.js"></script>
+		<script type="text/javascript" src="glCore.js"></script>
+		<script type="text/javascript">
+
+			var glConfig = {
+				v_field_of_view: 45, // camera's vertical field of view
+				viewer_position: [-20, 20, 10], // position of camera
+				target: [0, 0, 0], // position where camera is looking at
+				light_intensity: 70.0,
+				light_position: [11, 20, 0],
+				light_attenuation: [1.0, 0.6, 0.08]
+			}
+
+			/* vertex data in format [ x, y, z,    Nx, Ny, Nz,    u, v,
+									   x, y, z,    Nx, Ny, Nz,    u, v,
+									   			...		   ]4
+				where x, y, z - vertex position; Nx, Ny, Nz - normal vector; u, v - UV coordinates of texture
+			*/
+			var vertices = [ 0, 10, 0,      0.5735, 0.5735, 0.5735,     0.5, 1,
+							 10, 0, 0,      0.5735, 0.5735, 0.5735,     0, 0,
+							 0, 0, 10,      0.5735, 0.5735, 0.5735,     1, 0,
+
+							 0, 10, 0,      -0.5735, 0.5735, 0.5735,    0.5, 1,
+							 0, 0, 10,      -0.5735, 0.5735, 0.5735,    0, 0,
+							 -10, 0, 0,     -0.5735, 0.5735, 0.5735,    1, 0,
+
+							 0, 10, 0,      -0.5735, 0.5735, -0.5735,    0.5, 1,
+							 -10, 0, 0,     -0.5735, 0.5735, -0.5735,    0, 0,
+							 0, 0, -10,     -0.5735, 0.5735, -0.5735,    1, 0,
+
+							 0, 10, 0,      0.5735, 0.5735, -0.5735,     0.5, 1,
+							 0, 0, -10,     0.5735, 0.5735, -0.5735,     0, 0,
+							 10, 0, 0,      0.5735, 0.5735, -0.5735,     1, 0,
+
+							 10, 0, 0,      0, 0.5, 0,     0, 0,
+							 0, 0, 10,      0, 0.5, 0,     0, 1,
+							 -10, 0, 0,     0, 0.5, 0,     1, 1,
+							 0, 0, -10,     0, 0.5, 0,     1, 0 ];
+
+			var faces = [ 0, 1, 2, 
+						  3, 4, 5,
+						  6, 7, 8,
+						  9, 10, 11,
+						  12, 13, 14,
+						  12, 14, 15 ];
+
+			var rotation = 0;
+
+			function onFrameUpdate(){
+		        var vertexBuffer = createArrayBuffer(vertices);
+				var facesBuffer = createElementArrayBuffer(faces);
+		        //rotation += 90 * getDeltaTime();
+		        draw(vertexBuffer, facesBuffer, rotation);
+
+		        // call next frame repaint
+				requestAnimFrame(function(){
+					onFrameUpdate();
+				});
+			}
+
+			function onLoad(){
+				var canvas = document.getElementById("glCanvas");
+				initGL(canvas);
+
+				onFrameUpdate();
+			}
+
+		</script>
+	</head>
+	<body onload="onLoad()">
+		<canvas id="glCanvas" width="640" height="480" style="border: 1px solid black;"/>
+	</body> 
+</html>
