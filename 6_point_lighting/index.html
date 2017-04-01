@@ -12,12 +12,14 @@
 				v_field_of_view: 45, // camera's vertical field of view
 				viewer_position: [-2, 2, 1], // position of camera
 				target: [0, 0, 0], // position where camera is looking at
-				light_position: [15.0, 3, -3] // position of point light
+				light_intensity: 10.0,
+				light_position: [15, 0, 0],
+				light_attenuation: [1, 0.2, 0.04]
 			}
 
 			/* vertex data in format [ x, y, z,    Nx, Ny, Nz,    u, v,
 									   x, y, z,    Nx, Ny, Nz,    u, v,
-									   			...		   ]
+									   			...		   ]4
 				where x, y, z - vertex position; Nx, Ny, Nz - normal vector; u, v - UV coordinates of texture
 			*/
 			var vertices = [ 0, 1, 0,      0.5735, 0.5735, 0.5735,     0.5, 1,

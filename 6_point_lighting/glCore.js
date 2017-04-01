@@ -94,7 +94,9 @@ function draw(vertexBuffer, facesBuffer, rotation){
     // bind matrix uniforms
     gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
     gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
-    gl.uniform3fv(shaderProgram.lightPositionUniform, glConfig.light_position ? glConfig.light_position : [0, -2, 0]);
+    gl.uniform1f(shaderProgram.lightIntensityUniform, glConfig.light_intensity ? glConfig.light_intensity : 0.0);
+    gl.uniform3fv(shaderProgram.lightPositionUniform, glConfig.light_position ? glConfig.light_position : [-2, 0, 0]);
+    gl.uniform3fv(shaderProgram.lightAttenuationUniform, glConfig.light_attenuation ? glConfig.light_attenuation : [1, 0.2, 0.04]);
 
     gl.drawElements(gl.TRIANGLES, facesBuffer.size, gl.UNSIGNED_SHORT, 0);
     gl.flush();
@@ -163,8 +165,10 @@ function createShaderProgram(shaders){
     shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
     shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
 
-    // get reference of light position uniform
+    // get references of light-related uniforms
+    shaderProgram.lightIntensityUniform = gl.getUniformLocation(shaderProgram, "uLightIntensity");
     shaderProgram.lightPositionUniform = gl.getUniformLocation(shaderProgram, "uLightPosition");
+    shaderProgram.lightAttenuationUniform = gl.getUniformLocation(shaderProgram, "uLightAttenuation");
 
     return shaderProgram;
 }
