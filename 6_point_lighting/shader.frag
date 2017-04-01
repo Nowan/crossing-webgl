@@ -2,7 +2,6 @@
 precision mediump float;
 
 uniform sampler2D sampler;
-uniform float uLightIntensity;
 
 // input varying variables
 varying vec2 vUV;
@@ -37,11 +36,7 @@ void main() {
 	vec3 I_specular = source_specular_color * mat_specular_color;
 	I_specular *= pow( max( dot( R, V ), 0.0 ), mat_shininess);
 
-	float multiplier = uLightIntensity * vAttenuation;
-
-	vec3 I = I_ambient + multiplier * I_diffuse + multiplier * I_specular;
+	vec3 I = I_ambient + vAttenuation * I_diffuse + vAttenuation * I_specular;
 
 	gl_FragColor = vec4(I * color, 1.0);
-
-	//gl_FragColor = vec4(vVertexLight * color, 1.0);
 }

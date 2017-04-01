@@ -7,6 +7,7 @@ attribute vec3 aNormalVector;
 // input uniforms
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
+uniform float uLightIntensity;
 uniform vec3 uLightPosition;
 uniform vec3 uLightAttenuation;
 
@@ -28,7 +29,6 @@ void main(void) {
     vec3 vertexViewspacePosition = (uMVMatrix * vec4(aVertexPosition, 1.0)).xyz;
     vSurface = uLightPosition - vertexViewspacePosition;
 
-    vec3 lightVector = uLightPosition - vertexViewspacePosition;
-    float distanceToLight = length(lightVector);
-    vAttenuation = 1.0 / (uLightAttenuation[0] + distanceToLight * (uLightAttenuation[1] + distanceToLight * uLightAttenuation[2]));
+    float distanceToLight = length(vSurface);
+    vAttenuation = uLightIntensity / (uLightAttenuation[0] + distanceToLight * (uLightAttenuation[1] + distanceToLight * uLightAttenuation[2]));
 }
