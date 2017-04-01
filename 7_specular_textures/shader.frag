@@ -2,6 +2,7 @@
 precision mediump float;
 
 uniform sampler2D sampler;
+uniform sampler2D uSpecular;
 
 // input varying variables
 varying vec2 vUV;
@@ -23,8 +24,8 @@ const vec3 mat_specular_color = vec3(0.4, 0.4, 0.4);
 const float mat_shininess = 15.0;
  
 void main() {
-	//gl_FragColor = texture2D(sampler, vUV);
-	vec3 color = vec3( texture2D( sampler, vUV ) );
+	vec3 texture_color = vec3( texture2D( sampler, vUV ) );
+	vec3 specular_color = vec3( texture2D( uSpecular, vUV ) );
 
 	vec3 surface_to_light = normalize( vSurface );
 
@@ -33,10 +34,12 @@ void main() {
 
 	vec3 V = normalize( vView );
 	vec3 R = reflect( surface_to_light, vNormal ); // compute reflection vector
+
+	float specularExponent = texture2D(uSpecular, vUV).a;
 	vec3 I_specular = source_specular_color * mat_specular_color;
-	I_specular *= pow( max( dot( R, V ), 0.0 ), mat_shininess);
+	I_specular *= pow( max( dot( R, V ), 0.0 ), specularExponent);
 
 	vec3 I = I_ambient + vAttenuation * I_diffuse + vAttenuation * I_specular;
 
-	gl_FragColor = vec4(I * color, 1.0);
+	gl_FragColor = vec4(I * texture_color, 1.0);
 }

@@ -6,22 +6,24 @@ var pMatrix = mat4.create();
 var mvMatrixStack = [];
 
 var polygonTexture;
+var specularTexture;
 
 function initGL(canvas){
 
-	gl = canvas.getContext("webgl") || 
-		 canvas.getContext("experimental-webgl") || 
-		 canvas.getContext("moz-webgl") || 
-		 canvas.getContext("webkit-3d");
+    gl = canvas.getContext("webgl") || 
+         canvas.getContext("experimental-webgl") || 
+         canvas.getContext("moz-webgl") || 
+         canvas.getContext("webkit-3d");
 
-	if(gl){
+    if(gl){
         console.log("Canvas retrieving successful");
 
-		gl.viewportWidth = canvas.width;
-		gl.viewportHeight = canvas.height;
+        gl.viewportWidth = canvas.width;
+        gl.viewportHeight = canvas.height;
 
-        // load texture
+        // load textures
         polygonTexture = getTexture("texture.png");
+        specularTexture = getTexture("texture_specular.png");
 
         // init shader program
         var vShaderSource = readFile("shader.vert");
@@ -56,8 +58,8 @@ function initGL(canvas){
         gl.enable(gl.DEPTH_TEST);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
-	else
-		console.log("Your browser doesn't support OpenGL");
+    else
+        console.log("Your browser doesn't support OpenGL");
 }
 
 
@@ -159,7 +161,10 @@ function createShaderProgram(shaders){
 
     // get reference to sampler
     shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "sampler");
+    shaderProgram.specularUniform = gl.getUniformLocation(shaderProgram,"uSpecular");
+
     gl.uniform1i(shaderProgram.samplerUniform, 0); // set sampler to texture channel 0
+    gl.uniform1i(shaderProgram.specularUniform, 1);
 
     // get references of projection & model-view uniforms
     shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
